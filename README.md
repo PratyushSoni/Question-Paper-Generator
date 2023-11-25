@@ -1,5 +1,3 @@
-# Question-Paper-Generator
-
 # Question Paper Generator
 
 This project is a Question Paper Generator that allows users to specify the total marks, difficulty distribution, and topics to generate a question paper. The questions are randomly selected based on the provided criteria.
