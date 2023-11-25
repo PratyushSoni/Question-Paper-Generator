@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Question Paper Generator</title>
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+    <!-- Include additional JavaScript files -->
+    <script src="questionStore.js" defer></script>
+    <script src="questionPaperGenerator.js" defer></script>
+    <script src="main.js" defer></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 15px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        #result {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <h2>Question Paper Generator</h2>
+
+    <label for="totalMarks">Total Marks:</label>
+    <input type="number" id="totalMarks" placeholder="Enter total marks">
+
+    <label for="easyPercentage">Easy Percentage:</label>
+    <input type="number" id="easyPercentage" placeholder="Enter percentage for Easy">
+
+    <label for="mediumPercentage">Medium Percentage:</label>
+    <input type="number" id="mediumPercentage" placeholder="Enter percentage for Medium">
+
+    <label for="hardPercentage">Hard Percentage:</label>
+    <input type="number" id="hardPercentage" placeholder="Enter percentage for Hard">
+
+    <label for="topics">Select Topics:</label>
+    <select id="topics" multiple>
+        <option value="Waves">Waves</option>
+        <option value="Thermodynamics">Thermodynamics</option>
+        <option value="Evolution">Evolution</option>
+        <option value="Algebra">Algebra</option>
+        <!-- Add more options as needed -->
+    </select>
+
+    <button onclick="generateQuestionPaper()">Generate Question Paper</button>
+
+    <div id="result"></div>
+
+    <script>
+        async function generateQuestionPaper() {
+            const totalMarks = document.getElementById('totalMarks').value;
+            const easyPercentage = document.getElementById('easyPercentage').value;
+            const mediumPercentage = document.getElementById('mediumPercentage').value;
+            const hardPercentage = document.getElementById('hardPercentage').value;
+            const topicsSelect = document.getElementById('topics');
+            const selectedTopics = Array.from(topicsSelect.selectedOptions).map(option => option.value);
+
+            const response = await fetch('http://localhost:3000/generateQuestionPaper', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    totalMarks: parseInt(totalMarks),
+                    difficultyDistribution: {
+                        Easy: parseInt(easyPercentage),
+                        Medium: parseInt(mediumPercentage),
+                        Hard: parseInt(hardPercentage),
+                    },
+                    topics: selectedTopics,
+                }),
+            });
+
+            const resultContainer = document.getElementById('result');
+            resultContainer.innerHTML = '';
+
+            if (response.ok) {
+                const questionPaper = await response.json();
+                resultContainer.innerHTML = '<h3>Generated Question Paper:</h3>';
+                questionPaper.forEach((question, index) => {
+                    resultContainer.innerHTML += `<p>${index + 1}. ${question.question} (${question.difficulty}) - ${question.marks} marks</p>`;
+                });
+            } else {
+                const errorData = await response.json();
+                resultContainer.innerHTML = `<p>Error: ${errorData.error}</p>`;
+            }
+        }
+    </script>
+
+</body>
+
+</html>

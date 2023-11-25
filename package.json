@@ -1,0 +1,23 @@
+{
+  "name": "question-paper-generator",
+  "version": "1.0.0",
+  "description": "A Question Paper Generator application",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "node src/main.js"
+  },
+  "keywords": [
+    "question",
+    "paper",
+    "generator",
+    "node",
+    "express"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "body-parser": "^1.19.0",
+    "lodash": "^4.17.21"
+  }
+}
