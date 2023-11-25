@@ -6,6 +6,16 @@ const { generateQuestionPaperAPI } = require("../src/questionPaperGenerator");
 const app = express();
 const port = 3000;
 
+app.use((req, res, next) => {
+  res.header(
+    "Access-Control-Allow-Origin",
+    "https://question-paper-generator-9umx.onrender.com"
+  );
+  res.header("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
+  res.header("Access-Control-Allow-Headers", "Content-Type");
+  next();
+});
+
 // Middleware to parse JSON in requests
 app.use(bodyParser.json());
 
